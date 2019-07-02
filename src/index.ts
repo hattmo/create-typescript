@@ -1,8 +1,7 @@
 import inquirer from "inquirer";
-import { exec } from "child_process";
+import { spawnSync } from "child_process";
 import { promisify } from "util";
 import { promises as fs } from "fs";
-const execp = promisify(exec);
 
 export async function start() {
     let dependencies = "";
@@ -19,8 +18,8 @@ export async function start() {
             message: "What is the app description?",
         }, {
             name: "clientServer",
-            choices: ["Client", "Server"],
-            type: "checkbox",
+            choices: ["CLI", "Front End Library", "Backend Library", "Express App", "Standalone React App", "React + Express"],
+            type: "list",
             message: "Is this a Client or Server App?",
         }]
     ) as any;
@@ -61,8 +60,7 @@ export async function start() {
     }
 
     await fs.writeFile('package.json', JSON.stringify(packageJson, null, 2));
-    await execp(`npm i -D ${devDependecies}`);
-    await execp(`npm i ${dependencies}`);
+    await spawnSync(`npm i -D ${devDependecies}`);
+    await spawnSync(`npm i ${dependencies}`);
     await fs.writeFile(".gitignore", await fs.readFile(__dirname + "/../templates/.gitignore_T"));
 }
-//setup git

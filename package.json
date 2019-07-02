@@ -5,8 +5,7 @@
   "main": "dist/index.js",
   "bin": "dist/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./dist/main",
+    "start": "ts-node ./scripts/devstart",
     "build": "tsc --project ."
   },
   "author": "Hattmo",
@@ -15,6 +14,8 @@
     "inquirer": "^6.4.1"
   },
   "devDependencies": {
-    "@types/inquirer": "^6.0.3"
+    "@types/inquirer": "^6.0.3",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.2"
   }
 }
