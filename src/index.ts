@@ -60,7 +60,7 @@ export async function start() {
     }
 
     await fs.writeFile('package.json', JSON.stringify(packageJson, null, 2));
-    await spawnSync(`npm i -D ${devDependecies}`);
-    await spawnSync(`npm i ${dependencies}`);
+    spawnSync(`npm i -D ${devDependecies}`);
+    spawnSync(`npm i ${dependencies}`);
     await fs.writeFile(".gitignore", await fs.readFile(__dirname + "/../templates/.gitignore_T"));
 }

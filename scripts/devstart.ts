@@ -3,14 +3,29 @@ import { start } from "../src/index";
 
 (async function () {
   try {
-    console.log("Creating temp directory...");
-    await fs.mkdir("./temp");
+    console.log("Creating testDirectory...");
+    await fs.mkdir("./testDirectory");
   } catch (err) {
-    console.log("Temp directory already exists...");
+    console.log("testDirectory already exists...");
   }
-  const files = await fs.readdir("./temp")
-  files.forEach((item)=>fs.unlink(`./temp/${item}`)));
-  console.log("Generating test output into ./temp...");
-  process.chdir("./temp");
+  await clearDirectory("./testDirectory");
+  console.log("Generating test output into ./testDirectory...");
+  process.chdir("./testDirectory");
   start();
 })();
+
+
+async function clearDirectory(path: string) {
+  const files = await fs.readdir(path);
+  await Promise.all(files.map((file) => {
+    return (async function () {
+      const stat = await fs.stat(`${path}/${file}`)
+      if (stat.isDirectory()) {
+        await clearDirectory(`${path}/${file}`);
+        await fs.rmdir(`${path}/${file}`)
+      } else {
+        await fs.unlink(`${path}/${file}`);
+      }
+    })()
+  }))
+}
