@@ -1,7 +1,7 @@
 {
-  "name": "@hattmo/create-project",
+  "name": "@hattmo/create-typescript",
   "version": "1.0.1",
-  "description": "Generates Project Templates",
+  "description": "Generates Typescript Project Templates",
   "main": "dist/index.js",
   "bin": "dist/main.js",
   "scripts": {
