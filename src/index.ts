@@ -1,5 +1,5 @@
 import inquirer from "inquirer";
-import { spawnSync } from "child_process";
+import { spawn } from "child_process";
 import { promisify } from "util";
 import { promises as fs } from "fs";
 
@@ -60,7 +60,24 @@ export async function start() {
     }
 
     await fs.writeFile('package.json', JSON.stringify(packageJson, null, 2));
-    spawnSync(`npm i -D ${devDependecies}`);
-    spawnSync(`npm i ${dependencies}`);
+    console.log(`Installing dev dependencies: npm i -D ${devDependecies}`)
+    await promiseExec(`npm i -D ${devDependecies}`);
+    console.log(`Installing core dependencies: npm i ${dependencies}`)
+    await promiseExec(`npm i ${dependencies}`);
     await fs.writeFile(".gitignore", await fs.readFile(__dirname + "/../templates/.gitignore_T"));
+}
+
+export function promiseExec(command: string) {
+    return new Promise((resolve, reject) => {
+        const child = spawn(command, {
+            shell: true,
+            stdio: [process.stdin, process.stdout, process.stderr]
+        });
+        child.on("exit", () => {
+            resolve();
+        });
+        child.on("error", (err) => {
+            reject(err)
+        })
+    })
 }
