@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
 import { start } from "../src/index";
-import {promiseExec} from "../src/index";
+
 (async function () {
   try {
     console.log("Creating testDirectory...");

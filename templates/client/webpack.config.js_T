@@ -27,8 +27,8 @@ const assets = {
     {
       loader: 'file-loader',
       options: {
-        outputPath: 'public',
-        publicPath: 'public',
+        outputPath: 'images',
+        publicPath: 'images',
         name: '[name].[ext]',
       },
     },
@@ -36,10 +36,10 @@ const assets = {
 }
 
 const config = {
-  entry: './src/client/index.tsx',
+  entry: './src/main.tsx',
   output: {
-    path: path.resolve(__dirname, 'dist/client'),
-    filename: 'public/bundle.js',
+    path: path.resolve(__dirname, 'dist/'),
+    filename: 'js/bundle.js',
   },
   module: {
     rules: [css, ts, assets],
