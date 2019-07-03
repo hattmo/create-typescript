@@ -39,6 +39,38 @@ export async function start() {
     packageJson.scripts["test:development"] = "mocha -r ts-node/register --bail ./test/**/*Test.ts";
 
     if (answer.type === "CLI") {
+        packageJson.scripts.build = "tsc --project .";
+        packageJson.scripts.prepublish = "npm run build";
+        packageJson.bin = "./dist/bin/main.js";
+        packageJson.main = "./dist/lib/index.js";
+        const cliAnswer = await inquirer.prompt(
+            [{
+                name: "options",
+                type: "checkbox",
+                message: "Select optional libraries",
+                choices: [
+                    {
+                        name: "Inquirer",
+                        value: {
+                            dep: " inquirer",
+                            dev: " @types/inquirer",
+                        },
+                    }],
+            }],
+        ) as {
+            name: string,
+            options: Array<{ dep: string, dev: string }>,
+        };
+        devDependencies += cliAnswer.options.map((item) => item.dev).join("");
+        dependencies += cliAnswer.options.map((item) => item.dep).join("");
+        await copyTemplates(__dirname + "/../templates/cli", "./", (filename, text) => {
+            if (filename === "README.md_T") {
+                return text.replace(/###name###/, answer.name.toUpperCase())
+                    .replace(/###description###/, answer.description);
+            } else {
+                return text;
+            }
+        });
 
     } else if (answer.type === "Library") {
         packageJson.scripts.build = "tsc --project .";
@@ -51,22 +83,32 @@ export async function start() {
                 message: "Select optional libraries",
                 choices: [
                     {
-                        short: "React",
-                        value: "  @types/react react",
+                        name: "React",
+                        value: {
+                            dev: " @types/react",
+                            dep: " react",
+                        },
                     }, {
-                        short: "React DOM",
-                        value: " @types/react-dom react-dom",
-                    }
-                    , {
-                        short: "React Router",
-                        value: " @types/react-router-dom react-router-dom",
+                        name: "React DOM",
+                        value: {
+                            dev: " @types/react-dom",
+                            dep: " react-dom",
+                        },
+                    }, {
+                        name: "React Router",
+                        value: {
+                            dev: " @types/react-router-dom",
+                            dep: " react-router-dom",
+                        },
                     }],
             }],
         ) as {
             name: string,
-            options: string[],
+            options: Array<{ dev: string, dep: string }>,
         };
-        await copyTemplates(__dirname + "/../templates/client", "./", (filename, text) => {
+        devDependencies += libraryAnswer.options.map((item) => item.dev).join("");
+        dependencies += libraryAnswer.options.map((item) => item.dep).join("");
+        await copyTemplates(__dirname + "/../templates/library", "./", (filename, text) => {
             if (filename === "README.md_T") {
                 return text.replace(/###name###/, answer.name.toUpperCase())
                     .replace(/###description###/, answer.description);
@@ -74,7 +116,6 @@ export async function start() {
                 return text;
             }
         });
-        devDependencies += libraryAnswer.options.join("");
     } else if (answer.type === "Express App") {
         packageJson.bin = "dist/server/bin/main.js";
         packageJson.main = "dist/server/app.js";
@@ -170,8 +211,8 @@ export function promiseExec(command: string) {
 }
 
 export async function copyTemplates(scrPath: string,
-                                    destpath: string,
-                                    processTemplate: (filename: string, templateText: string) => string) {
+    destpath: string,
+    processTemplate: (filename: string, templateText: string) => string) {
     const files = await fs.readdir(scrPath);
     await Promise.all(files.map((file) => {
         return (async () => {
