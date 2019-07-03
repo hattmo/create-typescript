@@ -113,6 +113,8 @@ export async function start() {
         remoteurl: string
     }
     await promiseExec("git init");
+    await promiseExec("git add .");
+    await promiseExec("git commit -m \"initial commit\"");
     if (gitAnswer.gitremote) {
         await promiseExec(`git remote add origin ${gitAnswer.remoteurl}`);
         await promiseExec('git push -u origin master')
