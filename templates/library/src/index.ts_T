@@ -1,0 +1,4 @@
+export default function(): boolean {
+  process.stdout.write("Hattmo Template Library");
+  return true;
+}
