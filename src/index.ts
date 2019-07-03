@@ -126,6 +126,9 @@ export async function start() {
 
         dependencies += " express";
         devDependencies += " @types/express";
+
+        process.stdout.write("Not Yet Implemented");
+        process.exit();
     } else if (answer.type === "Standalone React App") {
         packageJson.scripts.build = "webpack --mode production";
         packageJson.scripts.start = "webpack-dev-server --content-base=dist --inline --watch --hot";
@@ -162,7 +165,8 @@ export async function start() {
         devDependencies += " @types/react @types/react-dom html-webpack-plugin react react-dom css-loader style-loader file-loader ts-loader webpack webpack-cli webpack-dev-server";
         devDependencies += clientAnswer.options.join("");
     } else if (answer.type === "React + Express") {
-
+        process.stdout.write("Not Yet Implemented");
+        process.exit();
     }
 
     await fs.writeFile("package.json", JSON.stringify(packageJson, null, 2));
@@ -213,6 +217,7 @@ export function promiseExec(command: string) {
 export async function copyTemplates(scrPath: string,
     destpath: string,
     processTemplate: (filename: string, templateText: string) => string) {
+
     const files = await fs.readdir(scrPath);
     await Promise.all(files.map((file) => {
         return (async () => {
