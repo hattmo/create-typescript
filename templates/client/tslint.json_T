@@ -3,7 +3,7 @@
     "defaultSeverity": "error",
     "jsRules": {},
     "rules": {
-        "ordered-imports": true,
+        "ordered-imports": false,
         "object-literal-sort-keys": false,
         "no-console": {
             "severity": "warning"
