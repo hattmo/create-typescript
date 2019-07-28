@@ -1,5 +1,7 @@
-src/
-testDirectory
-.gitignore
-tsconfig.json
-scripts/
+/src/
+/testDirectory
+/.gitignore
+/tsconfig.json
+/scripts/
+/.travis.yml
+/tslint.json
