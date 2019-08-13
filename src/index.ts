@@ -195,7 +195,7 @@ export async function start() {
         // SCRIPTS
         packageJson.scripts.build = "webpack --mode production && tsc --project .";
         packageJson.scripts.prepublish = "npm run build";
-        packageJson.scripts.start = "nodemon -V dist/bin/main.js";
+        packageJson.scripts.start = "nodemon -V dist/server/bin/main.js";
         // ENTRY POINTS
         packageJson.bin = "dist/server/bin/main.js";
         packageJson.main = "dist/server/lib/app.js";

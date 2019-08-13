@@ -13,9 +13,7 @@ const ts = {
     {
       loader: 'ts-loader',
       options: {
-        compilerOptions: {
-          jsx: 'react',
-        },
+        configFile: "tsconfig.client.json"
       },
     },
   ],

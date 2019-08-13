@@ -1,12 +1,11 @@
 {
   "include": [
-    "./src/server/**/*"
+    "./src/client/**/*"
   ],
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "outDir": "./dist/server",
-    "rootDir": "./src/server",
+    "rootDir": "./src/client",
     "jsx": "react",
     "removeComments": true,
     "strict": true,
