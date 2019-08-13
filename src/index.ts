@@ -37,10 +37,14 @@ export async function start() {
     packageJson.scripts.test = "mocha -r ts-node/register --bail ./test/**/*Test.ts";
 
     if (answer.type === "CLI") {
+
+        // SCRIPTS
         packageJson.scripts.build = "tsc --project .";
         packageJson.scripts.prepublish = "npm run build";
+        // ENTRY POINTS
         packageJson.bin = "./dist/bin/main.js";
         packageJson.main = "./dist/lib/index.js";
+        // OPTIONS
         const cliAnswer = await inquirer.prompt(
             [{
                 name: "options",
@@ -59,7 +63,7 @@ export async function start() {
             name: string,
             options: Array<{ dep: string, dev: string }>,
         };
-
+        // COPY
         await copyTemplates(__dirname + "/../templates/cli", "./", (filename, text) => {
             if (filename === "README.md_T") {
                 return text.replace(/###name###/, answer.name.toUpperCase())
@@ -68,13 +72,18 @@ export async function start() {
                 return text;
             }
         });
+
+        // DEPENDENCIES
         devDependencies += cliAnswer.options.map((item) => item.dev).join("");
         dependencies += cliAnswer.options.map((item) => item.dep).join("");
 
     } else if (answer.type === "Library") {
+        // SCRIPTS
         packageJson.scripts.build = "tsc --project .";
         packageJson.scripts.prepublish = "npm run build";
+        // ENTRY POINTS
         packageJson.main = "./dist/index.js";
+        // OPTIONS
         const libraryAnswer = await inquirer.prompt(
             [{
                 name: "options",
@@ -105,6 +114,7 @@ export async function start() {
             name: string,
             options: Array<{ dev: string, dep: string }>,
         };
+        // COPY
         await copyTemplates(__dirname + "/../templates/library", "./", (filename, text) => {
             if (filename === "README.md_T") {
                 return text.replace(/###name###/, answer.name.toUpperCase())
@@ -113,14 +123,19 @@ export async function start() {
                 return text;
             }
         });
+        // DEPENDENCIES
         devDependencies += libraryAnswer.options.map((item) => item.dev).join("");
         dependencies += libraryAnswer.options.map((item) => item.dep).join("");
     } else if (answer.type === "Express App") {
-        packageJson.bin = "dist/bin/main.js";
-        packageJson.main = "dist/lib/app.js";
+        // SCRIPTS
         packageJson.scripts.build = "tsc --project .";
         packageJson.scripts.prepublish = "npm run build";
         packageJson.scripts.start = "nodemon -V dist/bin/main.js";
+        // ENTRY POINTS
+        packageJson.bin = "dist/bin/main.js";
+        packageJson.main = "dist/lib/app.js";
+        // OPTIONS
+        // COPY
         await copyTemplates(__dirname + "/../templates/server", "./", (filename, text) => {
             if (filename === "README.md_T") {
                 return text.replace(/###name###/, answer.name.toUpperCase())
@@ -129,11 +144,15 @@ export async function start() {
                 return text;
             }
         });
+        // DEPENDENCIES
         dependencies += " express";
         devDependencies += " @types/express nodemon";
     } else if (answer.type === "Standalone React App") {
+        // SCRIPTS
         packageJson.scripts.build = "webpack --mode production";
         packageJson.scripts.start = "webpack-dev-server --content-base=dist --inline --watch --hot";
+        // ENTRY POINTS
+        // OPTIONS
         const clientAnswer = await inquirer.prompt(
             [{
                 name: "name",
@@ -145,7 +164,7 @@ export async function start() {
                 type: "checkbox",
                 message: "Select optional libraries",
                 choices: [{
-                    short: "React Router",
+                    name: "React Router",
                     value: {
                         dev: " react-router-dom @types/react-router-dom",
                         dep: "",
@@ -156,7 +175,7 @@ export async function start() {
             name: string,
             options: Array<{ dev: string, dep: string }>,
         };
-
+        // COPY
         await copyTemplates(__dirname + "/../templates/client", "./", (filename, text) => {
             if (filename === "webpack.config.js_T") {
                 return text.replace(/###name###/, clientAnswer.name);
@@ -167,15 +186,57 @@ export async function start() {
                 return text;
             }
         });
-
+        // DEPENDENCIES
         devDependencies += clientAnswer.options.map((item) => item.dev).join("");
         dependencies += clientAnswer.options.map((item) => item.dep).join("");
         // tslint:disable-next-line: max-line-length
         devDependencies += " @types/react @types/react-dom html-webpack-plugin react react-dom css-loader style-loader file-loader ts-loader webpack webpack-cli webpack-dev-server";
-        devDependencies += clientAnswer.options.join("");
     } else if (answer.type === "React + Express") {
-        process.stdout.write("Not Yet Implemented");
-        process.exit();
+        // SCRIPTS
+        packageJson.scripts.build = "webpack --mode production && tsc --project .";
+        packageJson.scripts.prepublish = "npm run build";
+        packageJson.scripts.start = "nodemon -V dist/bin/main.js";
+        // ENTRY POINTS
+        packageJson.bin = "dist/server/bin/main.js";
+        packageJson.main = "dist/server/lib/app.js";
+        // OPTIONS
+        const bothAnswer = await inquirer.prompt(
+            [{
+                name: "name",
+                type: "input",
+                message: "What is the window title?",
+                validate: (temp) => /(^[^\t\n\f\/>"'=]+$)/.test(temp),
+            }, {
+                name: "options",
+                type: "checkbox",
+                message: "Select optional libraries",
+                choices: [{
+                    name: "React Router",
+                    value: {
+                        dev: " react-router-dom @types/react-router-dom",
+                        dep: "",
+                    },
+                }],
+            }],
+        ) as {
+            name: string,
+            options: Array<{ dev: string, dep: string }>,
+        };
+        // COPY
+        await copyTemplates(__dirname + "/../templates/both", "./", (filename, text) => {
+            if (filename === "webpack.config.js_T") {
+                return text.replace(/###name###/, bothAnswer.name);
+            } else if (filename === "README.md_T") {
+                return text.replace(/###name###/, answer.name.toLocaleUpperCase())
+                    .replace(/###description###/, answer.description);
+            } else {
+                return text;
+            }
+        });
+        // DEPENDENCIES
+        dependencies += " express";
+        // tslint:disable-next-line: max-line-length
+        devDependencies += " @types/express nodemon @types/react @types/react-dom html-webpack-plugin react react-dom css-loader style-loader file-loader ts-loader webpack webpack-cli";
     }
 
     await fs.writeFile("package.json", JSON.stringify(packageJson, null, 2));
