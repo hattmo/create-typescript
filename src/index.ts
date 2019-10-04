@@ -16,6 +16,14 @@ export async function start() {
             type: "input",
             message: "What is the app description?",
         }, {
+            name: "author",
+            type: "input",
+            message: "What is the authors name?",
+        }, {
+            name: "npmName",
+            type: "input",
+            message: "What is the npm username?",
+        }, {
             name: "type",
             choices: ["CLI", "Library", "Express App", "Standalone React App", "React + Express"],
             type: "list",
@@ -24,14 +32,16 @@ export async function start() {
     ) as {
         name: string,
         description: string,
+        author: string,
+        npmName: string,
         type: string,
     };
 
     const packageJson: any = {};
     packageJson.version = "1.0.0";
-    packageJson.author = "Hattmo";
+    packageJson.author = answer.author;
     packageJson.license = "GPL-3.0-or-later";
-    packageJson.name = "@hattmo/" + answer.name;
+    packageJson.name = "@" + answer.npmName + "/" + answer.name;
     packageJson.description = answer.description;
     packageJson.scripts = {};
     packageJson.scripts.test = "mocha -r ts-node/register --bail ./test/**/*Test.ts";
@@ -39,8 +49,8 @@ export async function start() {
     if (answer.type === "CLI") {
 
         // SCRIPTS
-        packageJson.scripts.build = "tsc --project .";
-        packageJson.scripts.prepublish = "npm run build";
+        packageJson.scripts.build = "tsc --watch --project .";
+        packageJson.scripts.prepublish = "tsc --project .";
         // ENTRY POINTS
         packageJson.bin = "./dist/bin/main.js";
         packageJson.main = "./dist/lib/index.js";
@@ -79,39 +89,40 @@ export async function start() {
 
     } else if (answer.type === "Library") {
         // SCRIPTS
-        packageJson.scripts.build = "tsc --project .";
-        packageJson.scripts.prepublish = "npm run build";
+        packageJson.scripts.build = "tsc --watch --project .";
+        packageJson.scripts.prepublish = "tsc --project .";
         // ENTRY POINTS
         packageJson.main = "./dist/index.js";
         // OPTIONS
+        const choices = [
+            {
+                name: "React",
+                value: {
+                    dev: " @types/react",
+                    dep: " react",
+                },
+            }, {
+                name: "React DOM",
+                value: {
+                    dev: " @types/react-dom",
+                    dep: " react-dom",
+                },
+            }, {
+                name: "React Router",
+                value: {
+                    dev: " @types/react-router-dom",
+                    dep: " react-router-dom",
+                },
+            },
+        ];
         const libraryAnswer = await inquirer.prompt(
             [{
                 name: "options",
                 type: "checkbox",
                 message: "Select optional libraries",
-                choices: [
-                    {
-                        name: "React",
-                        value: {
-                            dev: " @types/react",
-                            dep: " react",
-                        },
-                    }, {
-                        name: "React DOM",
-                        value: {
-                            dev: " @types/react-dom",
-                            dep: " react-dom",
-                        },
-                    }, {
-                        name: "React Router",
-                        value: {
-                            dev: " @types/react-router-dom",
-                            dep: " react-router-dom",
-                        },
-                    }],
+                choices,
             }],
         ) as {
-            name: string,
             options: Array<{ dev: string, dep: string }>,
         };
         // COPY
@@ -128,8 +139,8 @@ export async function start() {
         dependencies += libraryAnswer.options.map((item) => item.dep).join("");
     } else if (answer.type === "Express App") {
         // SCRIPTS
-        packageJson.scripts.build = "tsc --project .";
-        packageJson.scripts.prepublish = "npm run build";
+        packageJson.scripts.build = "tsc --watch --project .";
+        packageJson.scripts.prepublish = "tsc --project .";
         packageJson.scripts.start = "nodemon -V dist/bin/main.js";
         // ENTRY POINTS
         packageJson.bin = "dist/bin/main.js";
@@ -193,9 +204,9 @@ export async function start() {
         devDependencies += " @types/react @types/react-dom html-webpack-plugin react react-dom css-loader style-loader file-loader ts-loader webpack webpack-cli webpack-dev-server";
     } else if (answer.type === "React + Express") {
         // SCRIPTS
-        packageJson.scripts.build = "webpack --mode production && tsc --project .";
-        packageJson.scripts.prepublish = "npm run build";
-        packageJson.scripts.start = "nodemon -V dist/server/bin/main.js";
+        // tslint:disable-next-line: max-line-length
+        packageJson.scripts.build = "concurrently \"webpack-cli --watch --mode development\" \"tsc --project ./src/server --watch\"";
+        packageJson.scripts.start = "nodemon -V dist/server/bin/main";
         // ENTRY POINTS
         packageJson.bin = "dist/server/bin/main.js";
         packageJson.main = "dist/server/lib/app.js";
@@ -236,37 +247,19 @@ export async function start() {
         // DEPENDENCIES
         dependencies += " express";
         // tslint:disable-next-line: max-line-length
-        devDependencies += " @types/express nodemon @types/react @types/react-dom html-webpack-plugin react react-dom css-loader style-loader file-loader ts-loader webpack webpack-cli";
+        devDependencies += " @types/express nodemon @types/react @types/react-dom html-webpack-plugin react react-dom css-loader style-loader file-loader ts-loader webpack webpack-cli concurrently";
     }
 
-    await fs.writeFile("package.json", JSON.stringify(packageJson, null, 2));
+    await fs.writeFile("package.json", JSON.stringify(packageJson, null, 4));
     process.stdout.write(`Installing dev dependencies: npm i -D ${devDependencies}\n`);
     await promiseExec(`npm i -D ${devDependencies}`);
     if (dependencies) {
         process.stdout.write(`Installing core dependencies: npm i ${dependencies}\n`);
         await promiseExec(`npm i ${dependencies}`);
     }
-    const gitAnswer = await inquirer.prompt([{
-        name: "gitremote",
-        type: "confirm",
-        message: "Set git remote?",
-    }, {
-        name: "remoteurl",
-        type: "input",
-        message: "What is the remote url?",
-        when: (curr: { gitremote: boolean }) => curr.gitremote,
-    }]) as {
-        gitremote: boolean,
-        remoteurl: string,
-    };
     await promiseExec("git init");
     await promiseExec("git add .");
     await promiseExec("git commit -m \"initial commit\"");
-    if (gitAnswer.gitremote) {
-        await promiseExec(`git remote add origin ${gitAnswer.remoteurl}`);
-        await promiseExec("git push -u origin master");
-    }
-
 }
 
 export function promiseExec(command: string) {
