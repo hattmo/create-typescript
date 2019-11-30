@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: "master"
+
+jobs:
+  CICD:
+    name: CI-CD
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v1
+    - name: Setup Node
+      uses: action/setup-node@v1
+    - name: Install Dependencies
+      run: npm ci
+    - name: Run Test Scripts
+      run: npm test
+    - name: Publish to NPM
+      env:
+        NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      run: npm publish
