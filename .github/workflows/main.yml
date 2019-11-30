@@ -8,8 +8,6 @@ jobs:
   CICD:
     name: CI-CD
     runs-on: ubuntu-latest
-    env:
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v1
@@ -19,7 +17,9 @@ jobs:
         run: npm ci
       - name: Run Test Scripts
         run: npm test
-      - name: Login to NPM
-        run: echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}'>.npmrc
       - name: Publish to NPM
-        run: npm publish
+        env:
+          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+        run: |
+          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}'>.npmrc
+          npm publish
