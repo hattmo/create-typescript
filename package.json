@@ -2,8 +2,13 @@
   "name": "@hattmo/create-typescript",
   "version": "1.6.0",
   "description": "Generates Typescript Project Templates",
+  "keywords": ["typescript","init","npm"],
   "main": "dist/index.js",
   "bin": "dist/main.js",
+  "files": [
+    "/dist/",
+    "/templates/"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/hattmo/create-typescript"
@@ -14,7 +19,11 @@
     "prepublish": "npm run build",
     "test": "mocha -r ts-node/register --bail ./test/**/*Test.ts"
   },
-  "author": "Hattmo",
+  "author": {
+    "email": "matthew@hattmo.com",
+    "name": "Hattmo",
+    "url": "https://hattmo.com"
+  },
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "inquirer": "^6.5.0"
