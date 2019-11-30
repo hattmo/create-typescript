@@ -16,7 +16,7 @@
   "scripts": {
     "start": "ts-node ./scripts/devstart",
     "build": "tsc --project .",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "test": "mocha -r ts-node/register --bail ./test/**/*Test.ts"
   },
   "author": {
