@@ -1,8 +1,12 @@
 {
   "name": "@hattmo/create-typescript",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Generates Typescript Project Templates",
-  "keywords": ["typescript","init","npm"],
+  "keywords": [
+    "typescript",
+    "init",
+    "npm"
+  ],
   "main": "dist/index.js",
   "bin": "dist/main.js",
   "files": [
