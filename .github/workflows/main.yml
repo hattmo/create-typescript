@@ -9,17 +9,17 @@ jobs:
     name: CI-CD
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v1
-    - name: Setup Node
-      uses: actions/setup-node@v1.3.0
-    - name: Install Dependencies
-      run: npm ci
-    - name: Run Test Scripts
-      run: npm test
-    - name: Publish to NPM
-      env:
-        NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-      run: |
-        npm login
-        npm publish
+      - name: Checkout Repository
+        uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v1.3.0
+      - name: Install Dependencies
+        run: npm ci
+      - name: Run Test Scripts
+        run: npm test
+      - name: Login to NPM
+        env:
+          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+        run: echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}'>.npmrc
+      - name: Publish to NPM
+        run: npm publish
