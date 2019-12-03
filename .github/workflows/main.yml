@@ -1,9 +1,6 @@
 name: Build Workflow
 
-on:
-  release:
-    types:
-      - created
+on: push
 
 jobs:
   CICD:
@@ -18,6 +15,9 @@ jobs:
         run: npm ci
       - name: Run Test Scripts
         run: npm test
+      - env:
+          ref: ${{github.ref}}
+        run: $ref
       - name: Publish to NPM
         env:
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
