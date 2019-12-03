@@ -50,7 +50,7 @@ export async function start() {
 
         // SCRIPTS
         packageJson.scripts.build = "tsc --watch --project .";
-        packageJson.scripts.prepublish = "tsc --project .";
+        packageJson.scripts.prepare = "tsc --project .";
         // ENTRY POINTS
         packageJson.bin = "./dist/bin/main.js";
         packageJson.main = "./dist/lib/index.js";
