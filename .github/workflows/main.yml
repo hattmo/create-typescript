@@ -3,7 +3,7 @@ name: Build Workflow
 on:
   release:
     types:
-      - published
+      - created
 
 jobs:
   CICD:
