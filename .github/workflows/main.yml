@@ -15,10 +15,8 @@ jobs:
         run: npm ci
       - name: Run Test Scripts
         run: npm test
-      - env:
-          ref: ${{github.ref}}
-        run: echo $ref
       - name: Publish to NPM
+        if: ${{startsWith("refs/tags/",github.reg)}}
         env:
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
         run: |
