@@ -16,7 +16,7 @@ jobs:
       - name: Run Test Scripts
         run: npm test
       - name: Publish to NPM
-        if: ${{startsWith("refs/tags/",github.reg)}}
+        if: ${{startsWith("refs/tags/",github.ref)}}
         env:
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
         run: |
