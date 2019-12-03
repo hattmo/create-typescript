@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import * as http from "http";
+import http from "http";
 import app from "../lib/app";
 import { AddressInfo } from "net";
 

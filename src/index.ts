@@ -4,7 +4,7 @@ import inquirer from "inquirer";
 
 export async function start() {
     let dependencies = "";
-    let devDependencies = " @types/chai @types/mocha @types/node chai mocha ts-node tslint typescript";
+    let devDependencies = "@types/chai @types/mocha @types/node chai mocha ts-node tslint typescript";
     const answer = await inquirer.prompt(
         [{
             name: "name",
@@ -47,7 +47,7 @@ export async function start() {
     packageJson.scripts.test = "mocha -r ts-node/register --bail ./test/**/*Test.ts";
 
     if (answer.type === "CLI") {
-
+        packageJson.files = ["/dist/"];
         // SCRIPTS
         packageJson.scripts.build = "tsc --watch --project .";
         packageJson.scripts.prepare = "tsc --project .";
@@ -64,8 +64,8 @@ export async function start() {
                     {
                         name: "Inquirer",
                         value: {
-                            dep: " inquirer",
-                            dev: " @types/inquirer",
+                            dep: "inquirer",
+                            dev: "@types/inquirer",
                         },
                     }],
             }],
@@ -84,13 +84,14 @@ export async function start() {
         });
 
         // DEPENDENCIES
-        devDependencies += cliAnswer.options.map((item) => item.dev).join("");
-        dependencies += cliAnswer.options.map((item) => item.dep).join("");
+        devDependencies += (" " + cliAnswer.options.map((item) => item.dev).join(" "));
+        dependencies += (" " + cliAnswer.options.map((item) => item.dep).join(" "));
 
     } else if (answer.type === "Library") {
+        packageJson.files = ["/dist/"];
         // SCRIPTS
         packageJson.scripts.build = "tsc --watch --project .";
-        packageJson.scripts.prepublish = "tsc --project .";
+        packageJson.scripts.prepare = "tsc --project .";
         // ENTRY POINTS
         packageJson.main = "./dist/index.js";
         // OPTIONS
@@ -98,20 +99,20 @@ export async function start() {
             {
                 name: "React",
                 value: {
-                    dev: " @types/react",
-                    dep: " react",
+                    dev: "@types/react",
+                    dep: "react",
                 },
             }, {
                 name: "React DOM",
                 value: {
-                    dev: " @types/react-dom",
-                    dep: " react-dom",
+                    dev: "@types/react-dom",
+                    dep: "react-dom",
                 },
             }, {
                 name: "React Router",
                 value: {
-                    dev: " @types/react-router-dom",
-                    dep: " react-router-dom",
+                    dev: "@types/react-router-dom",
+                    dep: "react-router-dom",
                 },
             },
         ];
@@ -135,12 +136,13 @@ export async function start() {
             }
         });
         // DEPENDENCIES
-        devDependencies += libraryAnswer.options.map((item) => item.dev).join("");
-        dependencies += libraryAnswer.options.map((item) => item.dep).join("");
+        devDependencies += (" " + libraryAnswer.options.map((item) => item.dev).join(" "));
+        dependencies += (" " + libraryAnswer.options.map((item) => item.dep).join(" "));
     } else if (answer.type === "Express App") {
+        packageJson.files = ["/dist/"];
         // SCRIPTS
         packageJson.scripts.build = "tsc --watch --project .";
-        packageJson.scripts.prepublish = "tsc --project .";
+        packageJson.scripts.prepare = "tsc --project .";
         packageJson.scripts.start = "nodemon -V dist/bin/main.js";
         // ENTRY POINTS
         packageJson.bin = "dist/bin/main.js";
@@ -198,8 +200,8 @@ export async function start() {
             }
         });
         // DEPENDENCIES
-        devDependencies += clientAnswer.options.map((item) => item.dev).join("");
-        dependencies += clientAnswer.options.map((item) => item.dep).join("");
+        devDependencies += (" " + clientAnswer.options.map((item) => item.dev).join(""));
+        dependencies += (" " + clientAnswer.options.map((item) => item.dep).join(""));
         // tslint:disable-next-line: max-line-length
         devDependencies += " @types/react @types/react-dom html-webpack-plugin react react-dom css-loader style-loader file-loader ts-loader webpack webpack-cli webpack-dev-server";
     } else if (answer.type === "React + Express") {

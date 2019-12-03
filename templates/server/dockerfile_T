@@ -1,0 +1,12 @@
+FROM node
+WORKDIR /root/
+COPY ./ ./
+RUN npm ci
+RUN npx tsc --project .
+
+FROM node
+WORKDIR /root/
+COPY --from=0 /root/node_modules/ ./node_modules/
+COPY --from=0 /root/dist/ ./dist/
+ENTRYPOINT [ "node","/dist/main.js" ]
+EXPOSE 80
