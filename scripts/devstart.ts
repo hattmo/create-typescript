@@ -6,7 +6,7 @@ import { start } from "../src/index";
     process.stdout.write("Creating testDirectory...\n");
     await fs.mkdir("./testDirectory");
   } catch (err) {
-    process.stdout.write("testDirectory already exists, clearing directory...\n");
+    process.stdout.write("Test directory already exists, clearing directory...\n");
     await clearDirectory("./testDirectory");
   }
   process.stdout.write("Generating test output into ./testDirectory...\n");

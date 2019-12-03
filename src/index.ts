@@ -203,8 +203,9 @@ export async function start() {
         devDependencies += (" " + clientAnswer.options.map((item) => item.dev).join(""));
         dependencies += (" " + clientAnswer.options.map((item) => item.dep).join(""));
         // tslint:disable-next-line: max-line-length
-        devDependencies += " @types/react @types/react-dom html-webpack-plugin react react-dom css-loader style-loader file-loader ts-loader webpack webpack-cli webpack-dev-server";
+        devDependencies += " @types/react @types/react-dom html-webpack-plugin react react-dom ts-loader webpack webpack-cli webpack-dev-server";
     } else if (answer.type === "React + Express") {
+        packageJson.files = ["/dist/"];
         // SCRIPTS
         // tslint:disable-next-line: max-line-length
         packageJson.scripts.build = "concurrently \"webpack-cli --watch --mode development\" \"tsc --project ./src/server --watch\"";
@@ -251,7 +252,7 @@ export async function start() {
         // tslint:disable-next-line: max-line-length
         devDependencies += " @types/express nodemon @types/react @types/react-dom html-webpack-plugin react react-dom css-loader style-loader file-loader ts-loader webpack webpack-cli concurrently";
     }
-
+    dependencies = dependencies.trim();
     await fs.writeFile("package.json", JSON.stringify(packageJson, null, 4));
     process.stdout.write(`Installing dev dependencies: npm i -D ${devDependencies}\n`);
     await promiseExec(`npm i -D ${devDependencies}`);
