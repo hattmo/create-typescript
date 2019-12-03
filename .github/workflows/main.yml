@@ -17,7 +17,7 @@ jobs:
         run: npm test
       - env:
           ref: ${{github.ref}}
-        run: $ref
+        run: echo $ref
       - name: Publish to NPM
         env:
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
