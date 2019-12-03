@@ -1,9 +1,9 @@
 name: Build Workflow
 
 on:
-  push:
-    tags: ['*']
-    branches: [master]
+  release:
+    types:
+      - published
 
 jobs:
   CICD:
