@@ -1,12 +1,12 @@
-import * as React from "react";
-import * as ReactDom from "react-dom";
+import React from "react";
+import ReactDom from "react-dom";
 
 const root = document.createElement("div");
 document.body.appendChild(root);
 
 ReactDom.render(
   (<h1>
-    Hattmo Template React App
+    Template React App
   </h1>),
   root,
 );

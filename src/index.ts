@@ -250,7 +250,7 @@ export async function start() {
         // DEPENDENCIES
         dependencies += " express";
         // tslint:disable-next-line: max-line-length
-        devDependencies += " @types/express nodemon @types/react @types/react-dom html-webpack-plugin react react-dom css-loader style-loader file-loader ts-loader webpack webpack-cli concurrently";
+        devDependencies += " @types/express nodemon @types/react @types/react-dom html-webpack-plugin react react-dom ts-loader webpack webpack-cli concurrently";
     }
     dependencies = dependencies.trim();
     await fs.writeFile("package.json", JSON.stringify(packageJson, null, 4));
