@@ -1,0 +1,53 @@
+import path from "path";
+import { Configuration } from "webpack-dev-server";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+
+const ts = {
+  test: /\.ts(x)?$/,
+  use: [
+    {
+      loader: "ts-loader",
+    },
+  ],
+};
+
+const staticFiles = {
+  test: /\.(html|ico|png)$/,
+  loader: "file-loader",
+  options: {
+    name: "/[name].[ext]",
+  },
+};
+
+const devServer: Configuration = {
+  port: 8080,
+  historyApiFallback: true,
+  disableHostCheck: true,
+  contentBase: path.resolve(__dirname, "dst/"),
+  inline: true,
+  hot: true,
+};
+
+const html = new HtmlWebpackPlugin({
+  title: "###APPNAME###",
+  filename: "index.html",
+  inject: "body",
+  meta: { viewport: "width=device-width, initial-scale=1, shrink-to-fit=no" },
+});
+
+const config = {
+  entry: "./src/bin/main.tsx",
+  output: {
+    path: path.resolve(__dirname, "static/"),
+    filename: "bundle.js",
+  },
+  module: {
+    rules: [ts, staticFiles],
+  },
+  plugins: [html],
+  devServer,
+  resolve: {
+    extensions: [" ", ".js", ".jsx", ".ts", ".tsx"],
+  },
+};
+module.exports = config;

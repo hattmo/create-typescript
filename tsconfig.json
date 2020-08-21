@@ -4,11 +4,14 @@
     "target": "es5",
     "module": "commonjs",
     "allowJs": true,
-    "outDir": "./dist",
+    "outDir": "./dst",
     "rootDir": "./src",
     "removeComments": true,
     "strict": true,
     "alwaysStrict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true
   }
 }

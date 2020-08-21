@@ -1,4 +1,0 @@
-export default function(): boolean {
-  process.stdout.write("Library Not Yet Implemented\n");
-  return true;
-}
