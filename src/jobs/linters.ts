@@ -8,7 +8,7 @@ export default async (
   dep: string[],
   devDep: string[]
 ) => {
-  packageJson.scripts.lint = "prettier --write . && eslint src/**";
+  packageJson.scripts.lint = "prettier --write ./src/** && eslint ./src/**";
   devDep.push(
     "eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-config-google eslint-plugin-react eslint-config-prettier prettier"
   );
