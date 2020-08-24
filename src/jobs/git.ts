@@ -11,7 +11,7 @@ export default async (
   await exec("git add .");
   await exec('git commit -m "initial commit"');
   if (answers.gitCreate) {
-    await exec("git create");
-    await exec("git push");
+    await exec("hub create");
+    await exec("git push -u origin master");
   }
 };
