@@ -11,6 +11,7 @@ import react from "./jobs/react";
 import jest from "./jobs/jest";
 import git from "./jobs/git";
 import linters from "./jobs/linters";
+import optDeps from "./optDeps";
 
 export async function start() {
   let dependencies: string[] = [];
@@ -68,32 +69,7 @@ export async function start() {
     {
       name: "optDeps",
       type: "checkbox",
-      choices: [
-        {
-          name: "React-Router",
-          value: {
-            dep: "",
-            dev: "react-router-dom @types/react-router-dom",
-          },
-          disabled: (answers) => !answers.react,
-        },
-        {
-          name: "Helmet",
-          value: {
-            dep: "helmet",
-            dev: "@types/helmet",
-          },
-          disabled: (answers) => !answers.express,
-        },
-        {
-          name: "Morgan",
-          value: {
-            dep: "morgan",
-            dev: "@types/morgan",
-          },
-          disabled: (answers) => !answers.express,
-        },
-      ],
+      choices: optDeps,
     },
     {
       name: "jest",
