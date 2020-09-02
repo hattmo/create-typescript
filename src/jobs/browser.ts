@@ -26,7 +26,8 @@ export default async (
     "webpack-cli",
     "html-webpack-plugin",
     "ts-loader",
-    "file-loader"
+    "file-loader",
+    "ts-node"
   );
 
   await rm("./src/bin/*");
