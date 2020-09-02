@@ -20,7 +20,7 @@ const staticFiles = {
 };
 
 const devServer: Configuration = {
-  port: 8080,
+  port: 8081,
   historyApiFallback: true,
   disableHostCheck: true,
   contentBase: path.resolve(__dirname, "dst/"),
