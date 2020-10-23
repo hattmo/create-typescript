@@ -12,6 +12,7 @@ export default async (
   dep: string[],
   devDep: string[]
 ) => {
+  packageJson.main = "./dst/lib/App.js";
   devDep.push("react", "react-dom", "@types/react", "@types/react-dom");
   await rm("./src");
   await copy(p(__dirname, "../../templates/react"), process.cwd());
