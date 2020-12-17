@@ -23,7 +23,7 @@ const devServer: Configuration = {
   port: 8081,
   historyApiFallback: true,
   disableHostCheck: true,
-  contentBase: path.resolve(__dirname, "dst/"),
+  contentBase: path.resolve(__dirname, "static/"),
   inline: true,
   hot: true,
 };

@@ -14,7 +14,7 @@ export default async (
 ) => {
   packageJson.scripts.build = "webpack --watch";
   packageJson.scripts.prepare = "webpack --mode production && tsc --project .";
-  packageJson.scripts.start = "webpack-dev-server --watch";
+  packageJson.scripts.start = "webpack serve";
   packageJson.main = "./dst/lib/index.js";
   packageJson.files.push("/static/");
 
